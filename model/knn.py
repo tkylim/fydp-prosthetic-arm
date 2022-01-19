@@ -34,23 +34,47 @@ def add_to_classification(p, data, best, key):
             # sort in ascending order
             best.sort(key=lambda x: x[1])
 
+# expecting a 2d array of input data with rows of features
+def add_training_data(data, new_data, label):
+    for row in new_data:
+        data.append((label, row))
+
+    return data
+
+def get_k_nearest(data, p, K):
+    best = [("N/A",999)] * K
+    for training_point in data:
+        label = training_point[0]
+        features = training_point[1]
+        d = calc_distance(features, p)
+
+        if d < best[-1][1]:
+            best[-1] = (label, d)
+
+            # sort in ascending order
+            best.sort(key=lambda x: x[1])
+
+    return best
+
 def calc_mode(b):
     return mode([x[0] for x in b])
 
-K = 11
+#K = 11
 
-test_points = import_data("model/testdata.csv")
-
-for p in test_points:
-    # K closest 
-    closest = [("N/A",999)] * K
-    answer = p[0]
-    p = p[1:]
-
-    add_to_classification(p, import_data("model/open.csv"), closest, "OPEN")
-    add_to_classification(p, import_data("model/close.csv"), closest, "CLOSE")
-    add_to_classification(p, import_data("model/rest.csv"), closest, "REST")
-
-    m = calc_mode(closest)
-    
-    print("{}: {}".format(("RIGHT" if (m == answer) else "WRONG"), m))
+#test_points = import_data("model/testdata.csv")
+#
+#for p in test_points:
+#    # K closest 
+#    closest = [("N/A",999)] * K
+#    answer = p[0]
+#    p = p[1:]
+#
+#    add_to_classification(p, import_data("model/open.csv"), closest, "OPEN")
+#    add_to_classification(p, import_data("model/close.csv"), closest, "CLOSE")
+#    add_to_classification(p, import_data("model/rest.csv"), closest, "REST")
+#    add_to_classification(p, import_data("model/thumb_index.csv"), closest, "THUMB_INDEX")
+#    add_to_classification(p, import_data("model/index.csv"), closest, "INDEX")
+#
+#    m = calc_mode(closest)
+#    
+#    print("{}: {}".format(("RIGHT" if (m == answer) else "WRONG"), m))
