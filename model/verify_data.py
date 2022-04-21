@@ -5,10 +5,10 @@ import matplotlib.pyplot as plt
 import features
 import knn
 
-FNAME_IN_PREFIX = "../data/2022-03-03"
-FNAME_OUT_PREFIX = "model/2022-03-03"
+FNAME_IN_PREFIX = "../data/2022-03-22"
+FNAME_OUT_PREFIX = "model/2022-03-22"
 
-GESTURES = ["HR", "HO", "HC", "IMFE"]
+GESTURES = ["HR", "HO", "HC", "IMFE", "test2"]
 DIM_NUM = 6
 K = 3
 
@@ -51,4 +51,4 @@ for i in range(len(fsets)):
             correct[i] += 1
 
 
-print("Accuracy (K={}):\n{}\n{}%".format(K, GESTURES, ["{}%".format(int(correct[i] * 100 / (total[i]))) for i in range(len(correct))]))
+print("Accuracy (K={}):\n{}\n{}".format(K, GESTURES, ["{}%".format(int(correct[i] * 100 / (total[i]))) for i in range(len(correct))]))

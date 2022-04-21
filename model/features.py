@@ -6,8 +6,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
-DIM_NUM = 16
-GESTURE_NUM = 17
+#DIM_NUM = 16
 FEATURES_PER_INPUT = 4
 
 @dataclass
@@ -31,11 +30,11 @@ def sets_to_csv(sets):
 
     return out
 
-def csv_to_sets(csv):
+def csv_to_sets(csv, dim_num):
     out = []
     for row in csv:
         s = []
-        for i in range(0, DIM_NUM * FEATURES_PER_INPUT, FEATURES_PER_INPUT):
+        for i in range(0, dim_num * FEATURES_PER_INPUT, FEATURES_PER_INPUT):
             s.append(FeatureSet(mav=float(csv[row][i]), \
                                 zcrossings=int(csv[row][i+1]), \
                                 sschanges=int(csv[row][i+2]), \
@@ -51,14 +50,15 @@ def import_data(fname):
 
     return d
 
-def get_features(raw_data, label):
+def get_features(raw_data, label, dim_num):
     features = []
 
     data = np.array(raw_data).astype(float)
 
-    SAMPLE_RATE = 2048
-    SAMPLE_DURATION_S = 5
-    SAMPLE_COUNT = SAMPLE_RATE * SAMPLE_DURATION_S
+    SAMPLE_DURATION_S = 30
+    SAMPLE_COUNT = len(data)
+    SAMPLE_RATE = int(SAMPLE_COUNT / SAMPLE_DURATION_S)
+    print("Loading {} at {}Hz".format(label, SAMPLE_RATE))
 
     WINDOW_LEN_SAMPLES = 256
     WINDOW_OVERLAP_SAMPLES = 32
@@ -73,7 +73,7 @@ def get_features(raw_data, label):
         #print("Window from {} to {}".format(win_start, win_end))
         feature_set = []
 
-        for d in range(DIM_NUM):
+        for d in range(dim_num):
             f = FeatureSet()
             f.label = label
     

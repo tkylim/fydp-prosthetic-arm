@@ -2,6 +2,8 @@ import csv
 import math
 from statistics import mode
 
+import features
+
 def import_data(fname):
     d = list(csv.reader(open(fname, encoding="utf-8-sig")))
 
@@ -11,7 +13,7 @@ def import_data(fname):
 
 def calc_distance(p1, p2):
     if len(p1) != len(p2):
-        print("ERROR")
+        print("ERROR {}!={}".format(len(p1), len(p2)))
         return 0
 
     s = 0
@@ -35,18 +37,17 @@ def add_to_classification(p, data, best, key):
             best.sort(key=lambda x: x[1])
 
 # expecting a 2d array of input data with rows of features
-def add_training_data(data, new_data, label):
-    for row in new_data:
-        data.append((label, row))
+def add_training_data(data, new_data, label, ignore_index=-1):
+    for i in range(len(new_data)):
+        if ignore_index != i:
+            data.append((label, new_data[i]))
 
-    return data
-
-def get_k_nearest(data, p, K):
+def get_k_nearest(sets, p, K):
     best = [("N/A",999)] * K
-    for training_point in data:
-        label = training_point[0]
-        features = training_point[1]
-        d = calc_distance(features, p)
+    data = features.sets_to_csv([s[1] for s in sets])
+    for i in range(len(data)):
+        d = calc_distance(data[i], p)
+        label = sets[i][0]
 
         if d < best[-1][1]:
             best[-1] = (label, d)
